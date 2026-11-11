@@ -1,18 +1,24 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Atelier",
+    "slug": "atelier",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "app",
-    "userInterfaceStyle": "automatic",
+    "scheme": "atelier",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F6F2EA",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "supportsTablet": true,
+      "infoPlist": {
+        "CADisableMinimumFrameDurationOnPhone": true,
+        "NSCameraUsageDescription": "Atelier uses the camera to photograph pieces for your wardrobe.",
+        "NSPhotoLibraryUsageDescription": "Atelier needs access to your photos so you can add pieces to your wardrobe."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#F6F2EA",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -28,15 +34,22 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#F6F2EA",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Atelier needs access to your photos so you can add pieces to your wardrobe.",
+          "cameraPermission": "Atelier uses the camera to photograph pieces for your wardrobe."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": false
     }
   }
 }
