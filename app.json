@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "frequent-olive-otter",
+    "slug": "frequent-olive-otter",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "computer.inti.frequentoliveotter"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "computer.inti.frequent_olive_otter"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "frequentoliveotter"
+  }
+}
