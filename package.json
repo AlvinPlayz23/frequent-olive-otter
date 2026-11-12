@@ -2,6 +2,7 @@
   "name": "atelier",
   "version": "1.0.0",
   "main": "expo-router/entry",
+  "nativeNow": true,
   "private": true,
   "scripts": {
     "start": "expo start",
@@ -44,6 +45,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2",
     "typescript": "~5.9.2"
   }
 }

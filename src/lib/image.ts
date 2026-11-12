@@ -109,6 +109,13 @@ Photorealistic editorial fashion photograph of the full look "${outfitName}", fu
     return { image, engine: 'Gemini' };
   }
 
+  if (settings.imageEngine === 'gemini' && !settings.geminiKey.trim()) {
+    throw new AIError(
+      'NO_KEY',
+      'Try-on is set to Gemini, but no Gemini key is saved. Add one in Settings, or switch the engine to Auto.',
+    );
+  }
+
   if (nvidiaFailure instanceof AIError) {
     throw new AIError(
       'NEED_GEMINI',
