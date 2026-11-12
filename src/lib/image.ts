@@ -20,7 +20,7 @@ export async function castPersona(
   const subject = descriptor.trim() || 'a model';
   let nvidiaFailure: unknown = null;
 
-  if (settings.nvidiaKey.trim() && settings.imageEngine === 'auto') {
+  if (settings.nvidiaKey.trim()) {
     try {
       const base64 = await nvidiaPortrait(settings.nvidiaKey, subject);
       const image = await ingestBase64(base64, 'persona', 1400);

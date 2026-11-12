@@ -28,7 +28,7 @@ function LoadingMark() {
 }
 
 function Bootstrap({ children }: { children: React.ReactNode }) {
-  const { ready, initError } = useLibrary();
+  const { ready, initError, retry } = useLibrary();
   const [fontsLoaded] = useFonts(Ionicons.font);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ function Bootstrap({ children }: { children: React.ReactNode }) {
         <Button
           label="Try again"
           onPress={() => {
-            SplashScreen.hideAsync().catch(() => undefined);
+            retry().catch(() => undefined);
           }}
           variant="secondary"
           size="md"

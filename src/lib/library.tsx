@@ -46,6 +46,7 @@ type NewPersona = Omit<Persona, 'id' | 'createdAt'>;
 interface LibraryValue {
   ready: boolean;
   initError: string | null;
+  retry: () => Promise<void>;
   items: Item[];
   outfits: Outfit[];
   personas: Persona[];
@@ -84,31 +85,35 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const started = useRef(false);
 
+  const load = useCallback(async () => {
+    setReady(false);
+    setInitError(null);
+    try {
+      const [nextItems, nextOutfits, nextPersonas, nextRenders, nextMessages] =
+        await Promise.all([
+          listItems(),
+          listOutfits(),
+          listPersonas(),
+          listRenders(),
+          listMessages(),
+        ]);
+      setItems(nextItems);
+      setOutfits(nextOutfits);
+      setPersonas(nextPersonas);
+      setRenders(nextRenders);
+      setMessages(nextMessages);
+      setReady(true);
+    } catch (error) {
+      console.error('Failed to open the wardrobe database', error);
+      setInitError(error instanceof Error ? error.message : 'The wardrobe could not be opened.');
+    }
+  }, []);
+
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-    (async () => {
-      try {
-        const [nextItems, nextOutfits, nextPersonas, nextRenders, nextMessages] =
-          await Promise.all([
-            listItems(),
-            listOutfits(),
-            listPersonas(),
-            listRenders(),
-            listMessages(),
-          ]);
-        setItems(nextItems);
-        setOutfits(nextOutfits);
-        setPersonas(nextPersonas);
-        setRenders(nextRenders);
-        setMessages(nextMessages);
-        setReady(true);
-      } catch (error) {
-        console.error('Failed to open the wardrobe database', error);
-        setInitError(error instanceof Error ? error.message : 'The wardrobe could not be opened.');
-      }
-    })();
-  }, []);
+    load();
+  }, [load]);
 
   const addItem = useCallback(async (input: NewItem) => {
     const item: Item = { ...input, id: newId('itm'), createdAt: Date.now() };
@@ -254,6 +259,7 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     () => ({
       ready,
       initError,
+      retry: load,
       items,
       outfits,
       personas,
@@ -278,6 +284,7 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     [
       ready,
       initError,
+      load,
       items,
       outfits,
       personas,

@@ -14,6 +14,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { EASE_OUT } from '@/lib/animations';
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 interface PressableScaleProps {
   children: ReactNode;
   onPress?: () => void;
@@ -56,26 +58,25 @@ export function PressableScale({
   });
 
   return (
-    <Animated.View style={[style, animatedStyle]}>
-      <Pressable
-        accessibilityRole={accessibilityRole}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={accessibilityHint}
-        accessibilityState={{ ...accessibilityState, disabled: Boolean(disabled) }}
-        disabled={disabled}
-        hitSlop={hitSlop}
-        pressRetentionOffset={14}
-        onPressIn={() => {
-          pressed.set(withTiming(1, { duration: 140, easing: EASE_OUT }));
-        }}
-        onPressOut={() => {
-          pressed.set(withTiming(0, { duration: 180, easing: EASE_OUT }));
-        }}
-        onPress={onPress}
-        onLongPress={onLongPress}
-      >
-        {children}
-      </Pressable>
-    </Animated.View>
+    <AnimatedPressable
+      style={[style, animatedStyle]}
+      accessibilityRole={accessibilityRole}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ ...accessibilityState, disabled: Boolean(disabled) }}
+      disabled={disabled}
+      hitSlop={hitSlop}
+      pressRetentionOffset={14}
+      onPressIn={() => {
+        pressed.set(withTiming(1, { duration: 140, easing: EASE_OUT }));
+      }}
+      onPressOut={() => {
+        pressed.set(withTiming(0, { duration: 180, easing: EASE_OUT }));
+      }}
+      onPress={onPress}
+      onLongPress={onLongPress}
+    >
+      {children}
+    </AnimatedPressable>
   );
 }
