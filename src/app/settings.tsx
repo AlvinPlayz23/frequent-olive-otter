@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
   Linking,
   ScrollView,
   StyleSheet,
@@ -157,12 +158,12 @@ export default function SettingsScreen() {
           ) : undefined
         }
       />
-      <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 44 }]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
-      >
+      <KeyboardAvoidingView style={styles.flex} behavior="padding" keyboardVerticalOffset={0}>
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 44 }]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
         <Txt variant="eyebrow" color={colors.inkFaint}>
           Atelier
         </Txt>
@@ -236,7 +237,7 @@ export default function SettingsScreen() {
             style={styles.saveKeys}
           />
           <Txt variant="caption" color={colors.inkFaint} style={styles.keychainNote}>
-            Keys live in the iOS Keychain on this device. They never pass through a server we run.
+            Keys live in secure storage on this device. They never pass through a server we run.
           </Txt>
         </View>
 
@@ -339,7 +340,8 @@ export default function SettingsScreen() {
           Atelier {version} · Built for the Native Now shell{'\n'}
           A quiet wardrobe, on your own keys.
         </Txt>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -464,6 +466,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.paper,
+  },
+  flex: {
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,

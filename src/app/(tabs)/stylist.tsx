@@ -104,7 +104,7 @@ export default function StylistScreen() {
     if (!hasGemini) {
       setError({
         message: 'The stylist needs a Gemini key.',
-        detail: 'Add a free Gemini key in Settings. It stays in your iOS Keychain.',
+        detail: 'Add a free Gemini key in Settings. It stays in secure storage on this device.',
       });
       return;
     }
@@ -332,7 +332,7 @@ function Intro({
             Connect Gemini to begin.
           </Txt>
           <Txt variant="callout" color={colors.inkSoft} style={styles.setupBody}>
-            A free Gemini key powers the stylist and the AI cataloguing. It stays in your Keychain
+            A free Gemini key powers the stylist and the AI cataloguing. It stays in secure storage
             and is called directly from this device.
           </Txt>
           <Button

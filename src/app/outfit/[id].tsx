@@ -19,6 +19,7 @@ import { IconButton } from '@/components/IconButton';
 import { OutfitCollage } from '@/components/OutfitCollage';
 import { PressableScale } from '@/components/PressableScale';
 import { EmptyState } from '@/components/EmptyState';
+import { PromptDialog } from '@/components/PromptDialog';
 import { useLibrary } from '@/lib/library';
 import type { Item, Outfit, Render } from '@/lib/types';
 import { categoryLabel, timeAgo } from '@/lib/types';
@@ -33,6 +34,8 @@ export default function OutfitScreen() {
 
   const outfit = outfits.find((entry) => entry.id === id);
   const [picking, setPicking] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [renameDraft, setRenameDraft] = useState('');
   const [viewer, setViewer] = useState<Render | null>(null);
 
   const itemsById = useMemo(() => {
@@ -76,18 +79,8 @@ export default function OutfitScreen() {
       {
         text: 'Rename',
         onPress: () => {
-          Alert.prompt(
-            'Rename look',
-            'A short name keeps the studio legible.',
-            (text) => {
-              const next = text?.trim();
-              if (next) {
-                editOutfit({ ...outfit, name: next }).then(() => success()).catch(() => warn());
-              }
-            },
-            'plain-text',
-            outfit.name,
-          );
+          setRenameDraft(outfit.name);
+          setRenaming(true);
         },
       },
       { text: 'Cancel', style: 'cancel' },
@@ -385,6 +378,7 @@ export default function OutfitScreen() {
         visible={Boolean(viewer)}
         animationType="fade"
         presentationStyle="fullScreen"
+        statusBarTranslucent
         onRequestClose={() => setViewer(null)}
       >
         <View style={styles.viewer}>
@@ -410,11 +404,30 @@ export default function OutfitScreen() {
           {viewer ? (
             <Image source={{ uri: viewer.imageUri }} style={styles.viewerImage} contentFit="contain" />
           ) : null}
-          <Txt variant="caption" color="rgba(255,255,255,0.55)" style={styles.viewerCaption}>
+          <Txt
+            variant="caption"
+            color="rgba(255,255,255,0.55)"
+            style={[styles.viewerCaption, { paddingBottom: insets.bottom + 18 }]}
+          >
             {viewer?.engine ? `Rendered with ${viewer.engine}` : ''}
           </Txt>
         </View>
       </Modal>
+
+      <PromptDialog
+        visible={renaming}
+        title="Rename look"
+        message="A short name keeps the studio legible."
+        placeholder="Look name"
+        value={renameDraft}
+        onChangeText={setRenameDraft}
+        confirmLabel="Save"
+        onCancel={() => setRenaming(false)}
+        onConfirm={(name) => {
+          setRenaming(false);
+          editOutfit({ ...outfit, name }).then(() => success()).catch(() => warn());
+        }}
+      />
     </View>
   );
 }

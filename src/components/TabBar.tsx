@@ -57,6 +57,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       ]}
     >
       <View style={styles.shell}>
+        {/* Android uses BlurView's translucent fallback; the tint below keeps the bar legible. */}
         <BlurView intensity={80} tint="light" style={StyleSheet.absoluteFill} />
         <View style={styles.tint} />
         <View style={styles.highlight} />

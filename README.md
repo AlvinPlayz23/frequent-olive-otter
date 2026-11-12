@@ -2,13 +2,13 @@
 
 A quiet wardrobe, on your own keys.
 
-Atelier is a Native Now guest app for iOS. Photograph the pieces you own, compose
-looks, see them on a model — or on yourself — and ask a stylist that only knows
-what is actually on your rail.
+Atelier is a Native Now guest app for iOS, and it also runs in Expo Go on
+Android. Photograph the pieces you own, compose looks, see them on a model — or
+on yourself — and ask a stylist that only knows what is actually on your rail.
 
-Everything lives on the device: SQLite for the wardrobe, the iOS Keychain for API
-keys, and the app's document directory for images. There is no account, no
-backend, and no analytics.
+Everything lives on the device: SQLite for the wardrobe, the platform's secure
+storage for API keys, and the app's document directory for images. There is no
+account, no backend, and no analytics.
 
 ## Features
 
@@ -41,6 +41,42 @@ native-now open <manifestUrl>
 During development, `native-now push --reason "..."` re-exports and updates a
 running shell.
 
+## Preview in Expo Go on Android
+
+The app uses only modules that ship inside Expo Go, so no development build is
+needed. Install the latest **Expo Go** from the Play Store (it must support
+**SDK 57**), then pick one of these:
+
+**Same Wi-Fi (fastest)**
+
+```bash
+npx expo start
+```
+
+Scan the QR code with Expo Go. If the phone cannot reach the computer, use a
+tunnel instead:
+
+```bash
+npx expo start --tunnel
+```
+
+**Cloud workspace with a public proxy**
+
+If the dev server is exposed through an HTTPS proxy, point Expo CLI at it so the
+manifest and bundle use the public host:
+
+```bash
+EXPO_PACKAGER_PROXY_URL=https://<public-host> npx expo start --port 8081
+```
+
+Then open `exps://<public-host>` in Expo Go. The `exps://` scheme is the secure
+variant of `exp://` and is required when the proxy only serves HTTPS.
+
+Android notes: the system photo picker needs no library permission, camera
+access is still requested, and `expo-blur` falls back to a translucent tint on
+Android (the frosted headers and tab bar remain legible, just without a live
+blur).
+
 ## Keys
 
 Open **Settings** in the app and paste any of:
@@ -51,8 +87,9 @@ Open **Settings** in the app and paste any of:
 | Google Gemini (`AIza…`) | Stylist, cataloguing, photo try-on, backup images | Free tier at [Google AI Studio](https://aistudio.google.com/apikey) |
 | Google Search + engine id | Higher-quality image search | 100 queries/day at [Programmable Search](https://programmablesearchengine.google.com/) |
 
-Keys are stored with `expo-secure-store` in the iOS Keychain and are sent only
-to the provider they belong to.
+Keys are stored with `expo-secure-store` in the platform's secure storage — the
+Keychain on iOS, Keystore-backed storage on Android — and are sent only to the
+provider they belong to.
 
 ## Development
 

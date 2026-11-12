@@ -1,5 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -118,11 +124,12 @@ export default function ItemScreen() {
         }
       />
 
-      <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 40 }]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
+      <KeyboardAvoidingView style={styles.flex} behavior="padding" keyboardVerticalOffset={0}>
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 40 }]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
         <View style={styles.heroWrap}>
           <Image
             source={{ uri: item.imageUri }}
@@ -307,7 +314,8 @@ export default function ItemScreen() {
         <Txt variant="caption" color={colors.inkFaint} style={styles.note}>
           Your photo is stored only on this device. Remove the piece to delete it.
         </Txt>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -344,6 +352,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.paper,
+  },
+  flex: {
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,

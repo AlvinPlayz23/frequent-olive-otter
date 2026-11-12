@@ -74,7 +74,7 @@ export function Screen({
     <View style={styles.root}>
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={footer ? 'padding' : undefined}
+        behavior="padding"
         keyboardVerticalOffset={0}
       >
         <Animated.ScrollView
@@ -137,6 +137,7 @@ export function Screen({
           headerStyle,
         ]}
       >
+        {/* Android uses BlurView's translucent fallback; the paper tint below keeps the header legible. */}
         <BlurView intensity={80} tint="light" style={StyleSheet.absoluteFill} />
         <View style={styles.compactTint} />
         <View style={styles.compactRow}>

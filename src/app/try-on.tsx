@@ -12,6 +12,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Sharing from 'expo-sharing';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -58,6 +59,7 @@ export default function TryOnScreen() {
   const { outfits, items, personas, addRender } = useLibrary();
   const { settings } = useSettings();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   const outfit = outfits.find((entry) => entry.id === outfitId);
   const itemsById = useMemo(() => {
@@ -179,7 +181,7 @@ export default function TryOnScreen() {
     <View style={styles.root}>
       <ModalHeader title="Try on" onClose={() => router.back()} />
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 44 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   View,
@@ -145,7 +146,7 @@ export default function AddItemScreen() {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
         if (!permission.granted) {
           setError('Camera access is off.');
-          setErrorDetail('Allow camera access for Atelier in iOS Settings, then try again.');
+          setErrorDetail('Allow camera access for Atelier in Settings, then try again.');
           return;
         }
         const result = await ImagePicker.launchCameraAsync({
@@ -157,12 +158,8 @@ export default function AddItemScreen() {
           await ingest(result.assets[0].uri, 'camera');
         }
       } else {
-        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permission.granted) {
-          setError('Photo access is off.');
-          setErrorDetail('Allow photo access for Atelier in iOS Settings, then try again.');
-          return;
-        }
+        // The system photo picker grants access per selection on both
+        // platforms, so no library permission prompt is needed.
         const result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
           quality: 1,
@@ -192,7 +189,7 @@ export default function AddItemScreen() {
     if (!staged) return;
     if (!hasGemini) {
       setError('AI auto-fill needs a Gemini key.');
-      setErrorDetail('Add one in Settings — it is free and stays in your Keychain.');
+      setErrorDetail("Add one in Settings — it is free and stays in your device's secure storage.");
       setNeedsGemini(true);
       return;
     }
@@ -248,12 +245,12 @@ export default function AddItemScreen() {
   return (
     <View style={styles.root}>
       <ModalHeader title={title} onClose={() => router.back()} />
-      <ScrollView
-        contentContainerStyle={styles.content}
-        automaticallyAdjustKeyboardInsets
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
+      <KeyboardAvoidingView style={styles.flex} behavior="padding" keyboardVerticalOffset={0}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
         {error ? (
           <View style={styles.errorWrap}>
             <ErrorNotice
@@ -481,7 +478,8 @@ export default function AddItemScreen() {
             )}
           </>
         ) : null}
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -523,6 +521,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.paper,
+  },
+  flex: {
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,
