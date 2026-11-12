@@ -7,7 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
-import { SettingsProvider } from '@/lib/settings';
+import { SettingsProvider, useSettings } from '@/lib/settings';
 import { LibraryProvider, useLibrary } from '@/lib/library';
 import { Txt } from '@/components/Txt';
 import { Button } from '@/components/Button';
@@ -29,15 +29,16 @@ function LoadingMark() {
 
 function Bootstrap({ children }: { children: React.ReactNode }) {
   const { ready, initError, retry } = useLibrary();
+  const { loaded } = useSettings();
   const [fontsLoaded] = useFonts(Ionicons.font);
 
   useEffect(() => {
-    if (fontsLoaded && (ready || initError)) {
+    if (fontsLoaded && loaded && (ready || initError)) {
       SplashScreen.hideAsync().catch(() => undefined);
     }
-  }, [fontsLoaded, ready, initError]);
+  }, [fontsLoaded, loaded, ready, initError]);
 
-  if (!fontsLoaded) return <View style={styles.loading} />;
+  if (!fontsLoaded || !loaded) return <View style={styles.loading} />;
 
   if (initError) {
     return (

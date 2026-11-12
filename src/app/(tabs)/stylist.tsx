@@ -51,12 +51,12 @@ export default function StylistScreen() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<{ message: string; detail?: string } | null>(null);
   const [savingMessage, setSavingMessage] = useState<string | null>(null);
-  const draftUsed = useRef(false);
+  const lastDraft = useRef<string | null>(null);
   const lastPrompt = useRef<string | null>(null);
 
   useEffect(() => {
-    if (draftUsed.current || !params.draft) return;
-    draftUsed.current = true;
+    if (!params.draft || params.draft === lastDraft.current) return;
+    lastDraft.current = params.draft;
     setInput(params.draft);
   }, [params.draft]);
 
@@ -111,8 +111,18 @@ export default function StylistScreen() {
     tap();
     const history = messages;
     setInput('');
-    lastPrompt.current = text;
-    await addMessage({ role: 'user', text });
+    try {
+      await addMessage({ role: 'user', text });
+      lastPrompt.current = text;
+    } catch {
+      warn();
+      setInput(text);
+      setError({
+        message: 'That message could not be saved.',
+        detail: 'The wardrobe database did not accept it. Try again.',
+      });
+      return;
+    }
     scrollToEnd();
     await requestReply(text, history);
   };

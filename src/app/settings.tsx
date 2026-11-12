@@ -75,12 +75,14 @@ export default function SettingsScreen() {
   );
 
   const saveKeys = () => {
-    update({
+    const next = {
       nvidiaKey: draft.nvidiaKey.trim(),
       geminiKey: draft.geminiKey.trim(),
       cseKey: draft.cseKey.trim(),
       cseCx: draft.cseCx.trim(),
-    });
+    };
+    setDraft(next);
+    update(next);
     Keyboard.dismiss();
     success();
     setJustSaved(true);

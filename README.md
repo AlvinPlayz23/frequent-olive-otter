@@ -1,56 +1,69 @@
-# Welcome to your Expo app 👋
+# Atelier
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A quiet wardrobe, on your own keys.
 
-## Get started
+Atelier is a Native Now guest app for iOS. Photograph the pieces you own, compose
+looks, see them on a model — or on yourself — and ask a stylist that only knows
+what is actually on your rail.
 
-1. Install dependencies
+Everything lives on the device: SQLite for the wardrobe, the iOS Keychain for API
+keys, and the app's document directory for images. There is no account, no
+backend, and no analytics.
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Wardrobe** — add a piece with the camera, the photo library, a direct image
+  URL, or an in-app web image search. Gemini can name the piece, colour and
+  category from the photo.
+- **Studio** — compose looks from real wardrobe pieces. Every look keeps a
+  collage, its pieces and a lookbook of renders.
+- **Try-on** — cast an editorial model with AI, or use a full-body photo of
+  yourself. NVIDIA FLUX is tried first; Gemini takes over when a real photo
+  needs to be preserved.
+- **Stylist** — a Gemini-powered chat that proposes looks using only the item ids
+  in your wardrobe, with a one-tap save into the studio.
+- **Discover** — Google Programmable Search when a key is present, with a
+  keyless DuckDuckGo image search fallback.
 
-   ```bash
-   npx expo start
-   ```
+## Run it in the Native Now shell
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+This project ships JavaScript only. The shell (`com.genux.go`) already contains
+every native module in the catalog, so there is no prebuild, pod install, or EAS
+build.
 
 ```bash
-npm run reset-project
+npm install --legacy-peer-deps
+native-now doctor          # must report no issues
+native-now start           # export + serve; prints the manifest URL
+native-now open <manifestUrl>
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+During development, `native-now push --reason "..."` re-exports and updates a
+running shell.
 
-### Other setup steps
+## Keys
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Open **Settings** in the app and paste any of:
 
-## Learn more
+| Key | Used for | Free tier |
+| --- | --- | --- |
+| NVIDIA NIM (`nvapi-…`) | FLUX.3 model casting and first-pass try-on | Free credits at [build.nvidia.com](https://build.nvidia.com) |
+| Google Gemini (`AIza…`) | Stylist, cataloguing, photo try-on, backup images | Free tier at [Google AI Studio](https://aistudio.google.com/apikey) |
+| Google Search + engine id | Higher-quality image search | 100 queries/day at [Programmable Search](https://programmablesearchengine.google.com/) |
 
-To learn more about developing your project with Expo, look at the following resources:
+Keys are stored with `expo-secure-store` in the iOS Keychain and are sent only
+to the provider they belong to.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Development
 
-## Join the community
+```bash
+npm run typecheck          # tsc --noEmit
+npx expo lint
+```
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Expo SDK 57, React Native 0.86.3, React 19.2.3, Expo Router 57.
+- Routes live in `src/app/`; everything else is in `src/components/` and
+  `src/lib/`.
+- The palette and type ramp are in `src/lib/theme.ts`.
+- AI providers are isolated in `src/lib/ai/`; the try-on fallback lives in
+  `src/lib/image.ts`.
